@@ -10,7 +10,7 @@ const categories = [
   subtitle: "Real Stories. Real Impact.",
   description: "Discover how organizations across industries are using intelligent technologies to drive innovation, boost efficiency, and create smarter futures.",
   image: "/intelligent/intelligent.jpg",
-  buttonText: "Learn more",
+  buttonText: "Learn more ",
   buttonLink: "/stories/intelligent-transformation",
   alignLeft: true
 },
@@ -143,7 +143,7 @@ function CategoryCard({ category, index }: CategoryCardProps) {
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
           custom={0}
-          className="text-6xl font-bold mb-3 text-white drop-shadow-lg"
+          className="text-4xl font-bold mb-3 text-white drop-shadow-lg"
         >
           {category.title}
         </motion.h2>
@@ -174,7 +174,7 @@ function CategoryCard({ category, index }: CategoryCardProps) {
           animate={isInView ? "visible" : "hidden"}
           custom={3}
           href={category.buttonLink}
-          className=" hover:text-cyan-100 text-lg font-medium transition-all duration-300 inline-block group drop-shadow-md"
+          className="text-red-600 hover:text-red-400 text-lg font-medium transition-all duration-300 inline-block group drop-shadow-md"
         >
           {category.buttonText.replace(' >>', '')}
           <span className="transition-transform duration-300 group-hover:translate-x-2 inline-block text-lg">→</span>
