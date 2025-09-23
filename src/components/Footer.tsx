@@ -7,25 +7,24 @@ const Footer = () => {
     {
       title: "Quick Links",
       links: [
-        { name: "Huawei Group", url: "https://www.huawei.com/en/" },
-        { name: "Huawei Enterprise Business", url: "https://e.huawei.com/en/" }
+        { name: "Home", href: "/" },
+        { name: "About Us", href: "/about" }
       ]
     },
     {
       title: "Products",
       links: [
-        { name: "Partner Enablement", url: "https://e.huawei.com/en/partner-enablement" },
-        { name: "Partner Policies", url: "https://e.huawei.com/en/partner-policies" }
+        { name: "HUAWEI eKit", href: "/products/ekit" },
+        { name: "All Products", href: "/products" }
       ]
     },
     {
       title: "Solutions",
       links: [
-        { name: "Introduction to Huawei", url: "https://www.huawei.com/en/about-huawei" },
-        { name: "Huawei Enterprise Business", url: "https://e.huawei.com/en/" },
-        { name: "HUAWEI eKit", url: "https://e.huawei.com/en/ekit" },
-        { name: "Global Branches", url: "https://www.huawei.com/en/contact-us" },
-        { name: "Huawei News", url: "https://www.huawei.com/en/news" }
+        { name: "Intelligent Office", href: "/solutions/office" },
+        { name: "Intelligent Business", href: "/solutions/business" },
+        { name: "Intelligent Education", href: "/solutions/education" },
+        { name: "Intelligent Healthcare", href: "/solutions/healthcare" },
       ]
     },
     {
@@ -35,10 +34,10 @@ const Footer = () => {
   ];
 
   const bottomLinks = [
-    { name: "Contact Us", url: "https://www.huawei.com/en/contact-us" },
-    { name: "Privacy Statement", url: "https://www.huawei.com/en/privacy-policy" },
-    { name: "Cookies", url: "https://www.huawei.com/en/cookies" },
-    { name: "Cookie Settings", url: "https://www.huawei.com/en/cookie-settings" }
+    { name: "Contact Us", href: "/contact" },
+    { name: "Privacy Statement", href: "/privacy" },
+    { name: "Cookies", href: "/cookies" },
+    { name: "Cookie Settings", href: "/cookie-settings" }
   ];
 
   const contactInfo = [
@@ -87,8 +86,14 @@ const Footer = () => {
     }
   ];
 
-  // Function to handle link clicks
-  const handleLinkClick = (url: string, event?: React.MouseEvent) => {
+  // Function to handle internal navigation
+  const handleInternalLink = (href: string) => {
+    console.log(`Navigating to: ${href}`);
+    window.location.href = href;
+  };
+
+  // Function to handle external link clicks
+  const handleExternalLink = (url: string, event?: React.MouseEvent) => {
     if (event) {
       event.preventDefault();
     }
@@ -105,15 +110,18 @@ const Footer = () => {
             <div className="lg:col-span-1">
               {/* Logo */}
               <div className="mb-4">
-                <div className="flex items-center cursor-pointer" onClick={() => handleLinkClick("https://www.huawei.com/en/")}>
+                <div 
+                  className="flex items-center cursor-pointer hover:cursor-pointer" 
+                  onClick={() => handleInternalLink("/")}
+                >
                   <div className="w-10 h-7 bg-red-600 flex items-center justify-center rounded">
                     <span className="text-white font-bold text-sm">华为</span>
                   </div>
-                  <span className="ml-2 text-xl font-bold text-gray-900">HUAWEI</span>
+                  <span className="ml-2 text-xl font-bold text-gray-900 hover:cursor-pointer">HUAWEI</span>
                 </div>
               </div>
 
-              {/* Social Media Icons */}
+              {/* Social Media Icons - EXTERNAL LINKS */}
               <div>
                 <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-3">
                   Follow Us
@@ -123,9 +131,11 @@ const Footer = () => {
                     <a
                       key={index}
                       href={social.href}
-                      onClick={(e) => handleLinkClick(social.href, e)}
-                      className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-red-600 hover:text-white transition-colors duration-200"
+                      onClick={(e) => handleExternalLink(social.href, e)}
+                      className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-red-600 hover:text-white transition-colors duration-200 hover:cursor-pointer"
                       aria-label={social.label}
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
                       {social.icon}
                     </a>
@@ -151,20 +161,28 @@ const Footer = () => {
                           <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">
                             {contact.label}
                           </p>
-                          <a
-                            href={contact.url}
-                            onClick={(e) => {
-                              if (contact.type === 'email' || contact.type === 'phone' || contact.type === 'map') {
-                                // Allow default behavior for mailto, tel, and map links
-                                return;
-                              }
-                              e.preventDefault();
-                              handleLinkClick(contact.url, e);
-                            }}
-                            className="text-xs text-gray-600 hover:text-red-600 mt-0.5 leading-tight block transition-colors duration-200 cursor-pointer"
-                          >
-                            {contact.value}
-                          </a>
+                          {/* Contact Info - EXTERNAL LINKS with direct actions */}
+                          {contact.type === 'email' || contact.type === 'phone' || contact.type === 'map' ? (
+                            <a
+                              href={contact.url}
+                              className="text-xs text-gray-600 hover:text-red-600 mt-0.5 leading-tight block transition-colors duration-200 hover:cursor-pointer"
+                              onClick={(e) => {
+                                if (contact.type === 'email' || contact.type === 'phone') {
+                                  return;
+                                }
+                                handleExternalLink(contact.url, e);
+                              }}
+                            >
+                              {contact.value}
+                            </a>
+                          ) : (
+                            <button
+                              onClick={() => handleInternalLink(contact.url)}
+                              className="text-xs text-gray-600 hover:text-red-600 mt-0.5 leading-tight block transition-colors duration-200 hover:cursor-pointer text-left"
+                            >
+                              {contact.value}
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -173,13 +191,12 @@ const Footer = () => {
                   <ul className="space-y-2">
                     {section.links?.map((link, linkIndex) => (
                       <li key={linkIndex}>
-                        <a 
-                          href={link.url}
-                          onClick={(e) => handleLinkClick(link.url, e)}
-                          className="text-sm text-gray-600 hover:text-red-600 transition-colors duration-200 block"
+                        <button 
+                          onClick={() => handleInternalLink(link.href)}
+                          className="text-sm text-gray-600 hover:text-red-600 transition-colors duration-200 block hover:cursor-pointer"
                         >
                           {link.name}
-                        </a>
+                        </button>
                       </li>
                     ))}
                   </ul>
@@ -203,13 +220,12 @@ const Footer = () => {
             <div className="flex flex-wrap items-center space-x-4">
               {bottomLinks.map((link, index) => (
                 <React.Fragment key={index}>
-                  <a 
-                    href={link.url}
-                    onClick={(e) => handleLinkClick(link.url, e)}
-                    className="text-xs text-gray-500 hover:text-red-600 transition-colors duration-200"
+                  <button 
+                    onClick={() => handleInternalLink(link.href)}
+                    className="text-xs text-gray-500 hover:text-red-600 transition-colors duration-200 hover:cursor-pointer"
                   >
                     {link.name}
-                  </a>
+                  </button>
                   {index < bottomLinks.length - 1 && (
                     <span className="text-gray-300">|</span>
                   )}

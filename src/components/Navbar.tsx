@@ -1,15 +1,46 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { ChevronDownIcon, MagnifyingGlassIcon, UserIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { ChevronDownIcon, MagnifyingGlassIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
+
+interface NavigationItem {
+  title: string;
+  href: string;
+  dropdownContent?: {
+    sections: {
+      title: string;
+      items: string[];
+    }[];
+    links?: {
+      name: string;
+      href: string;
+      external?: boolean;
+    }[];
+  } | null;
+}
+
+interface TopNavItem {
+  name: string;
+  href: string;
+  description: string;
+  isActive?: boolean;
+}
 
 const Navbar = () => {
+  const router = useRouter();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [activeTopDropdown, setActiveTopDropdown] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [topHoverTimeout, setTopHoverTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [activePage, setActivePage] = useState<string>('Home');
+  const [mounted, setMounted] = useState(false);
 
   // Top navigation data
   const topNavItems = [
@@ -47,223 +78,212 @@ const Navbar = () => {
   ];
 
   // Main navigation data
-  const navigationItems = [
+  const navigationItems: NavigationItem[] = [
     {
-      title: 'Products and Solutions',
-      href: '#',
+      title: 'Home',
+      href: '/',
+      dropdownContent: null
+    },
+    {
+      title: 'Products',
+      href: '/products',
       dropdownContent: {
         sections: [
           {
-            title: 'Products',
+            title: 'Enterprise Networking',
             items: [
-              'Enterprise Networking',
-              'Optical Networking',
-              'Data Storage',
-              'Intelligent Collaboration',
-              'Enterprise Wireless',
-              'Enterprise Services and Software',
-              'Management System',
-              'Huawei Cloud',
-              'HUAWEI eKit'
+              'Campus Switches',
+              'Data Center Switches',
+              'Routers',
+              'WLAN Products',
+              'Network Management',
+              'Network Security'
             ]
           },
           {
-            title: 'Product Portfolio',
+            title: 'Computing & Cloud',
+            items: [
+              'Servers',
+              'Desktop Cloud',
+              'Huawei Cloud',
+              'AI Computing',
+              'Edge Computing'
+            ]
+          },
+          {
+            title: 'Collaboration',
+            items: [
+              'Video Conferencing',
+              'Telepresence',
+              'IP Phones',
+              'Unified Communications',
+              'Contact Center'
+            ]
+          }
+        ],
+        links: [
+          { name: 'All Products', href: '#', external: true },
+        ]
+      }
+    },
+    {
+      title: 'Solutions',
+      href: '/solutions',
+      dropdownContent: {
+        sections: [
+          {
+            title: 'Industry Solutions',
+            items: [
+              'Government',
+              'Education',
+              'Healthcare',
+              'Finance',
+              'Manufacturing',
+              'Retail',
+              'Transportation',
+              'Energy & Utilities'
+            ]
+          },
+          {
+            title: 'Technology Solutions',
             items: [
               'Data Center',
-              'Digital Site',
+              'Digital Campus',
               'Intelligent Campus',
-              'Wide Area Network'
+              'Wide Area Network',
+              'Digital Transformation',
+              'Cloud Migration'
             ]
           },
           {
-            title: 'Industries',
+            title: 'Smart City',
             items: [
-              'Commercial Market',
-              'Education',
-              'Electric Power',
-              'Finance',
-              'Government',
-              'Healthcare',
-              'ISP',
-              'Manufacturing',
-              'Mining and Smelting',
-              'Oil & Gas and Chemicals',
-              'Retail',
-              'Transportation'
+              'Smart Transportation',
+              'Safe City',
+              'Smart Education',
+              'Smart Healthcare',
+              'Digital Government'
             ]
           }
         ],
         links: [
-          { name: 'New Products', href: '#', external: true },
-          { name: 'All Products and Solutions', href: '#' },
-          { name: 'Resource Center', href: '#' }
+          { name: 'All Solutions', href: '/solution', external: true },
         ]
       }
     },
     {
-      title: 'Learning and Tech Support',
-      href: '#',
-      dropdownContent: {
-        sections: [
-          {
-            title: 'Support Center',
-            items: [
-              'Online Support',
-              'Service Request',
-              'Service Hotlines',
-              'Tools',
-              'Maintenance Status',
-              'RMA Status',
-              'Get License',
-              'Warranty'
-            ]
-          },
-          {
-            title: 'Product Support',
-            items: [
-              'Documentation',
-              'Software Download',
-              'Knowledge',
-              'Base Bulletins',
-              'Multimedia Portal',
-              'Online Courses',
-              'Multilingual Documents',
-              'HUAWEI eKit'
-            ]
-          },
-          {
-            title: 'Industry Solution Support',
-            items: [
-              'Government',
-              'Finance',
-              'Construction / Real Estate'
-            ]
-          },
-          {
-            title: 'Training and Certification',
-            items: [
-              'Learning Resources',
-              'Courses and Classes',
-              'Certification',
-              'ICT Academy',
-              'Learning Partner',
-              'Enterprise Training',
-              'More Info'
-            ]
-          }
-        ],
-        links: [
-          { name: 'Technical Support Home', href: '#', external: true },
-          { name: 'Community', href: '#', external: true }
-        ]
-      }
+      title: 'Support',
+      href: '/support',
+      dropdownContent: null
     },
     {
-      title: 'Partners',
-      href: '#',
-      dropdownContent: {
-        sections: [
-          {
-            title: 'Become Partner',
-            items: [
-              'Join Sales Partner Program',
-              'Join Service Partner Program',
-              'Join Solution Partner Program'
-            ]
-          },
-          {
-            title: 'Partner Policy',
-            items: [
-              'Partner Policy'
-            ]
-          },
-          {
-            title: 'Partner Support',
-            items: [
-              'Huawei Partner University',
-              'Partner Bidding & Network Design Toolkits',
-              'Huawei Partner Marketing WorkSpace'
-            ]
-          }
-        ],
-        links: [
-          { name: 'Partner Home', href: '#', external: true }
-        ]
-      }
-    },
-    {
-      title: 'How to Buy',
-      href: '#',
-      dropdownContent: {
-        sections: [
-          {
-            title: 'Ask the Chatbot',
-            items: [
-              'Instantly find the answers to all your questions about Huawei products and solutions.'
-            ]
-          },
-          {
-            title: 'Contact Huawei Sales',
-            items: [
-              'Looking to make a purchase? Leave your details and we\'ll be in touch.'
-            ]
-          },
-          {
-            title: 'Find a Reseller',
-            items: [
-              'Find your local reseller now.'
-            ]
-          }
-        ],
-        links: [
-          { name: 'Ask Now', href: '#' },
-          { name: 'Get in Touch', href: '#' },
-          { name: 'Find a Reseller', href: '#' },
-          { name: 'How to Buy', href: '#' }
-        ]
-      }
+      title: 'Contact Us',
+      href: '/contact',
+      dropdownContent: null
     },
     {
       title: 'About Us',
-      href: '#',
-      dropdownContent: {
-        sections: [
-          {
-            title: 'Discover More',
-            items: [
-              'About Huawei Enterprise',
-              'News Room',
-              'Events',
-              'Case Studies',
-              'Knowledge Hub',
-              'Video Center',
-              'ICT Insights',
-              'Blogs'
-            ]
-          },
-          {
-            title: 'Hot Topics',
-            items: [
-              'Accelerate Industrial Intelligence',
-              'City of Intelligence',
-              '100 Intelligent Transformation Stories'
-            ]
-          },
-          {
-            title: 'Contact Us',
-            items: [
-              'Global Service Hotline',
-              'Branch Office'
-            ]
-          }
-        ]
-      }
+      href: '/about',
+      dropdownContent: null
     }
   ];
 
+  // Function to determine if a nav item should be active based on current path
+  const isNavItemActive = useCallback((navItem: NavigationItem, currentPath: string) => {
+    // Special case for Home - only active on exact root path
+    if (navItem.href === '/' && currentPath === '/') {
+      return true;
+    }
+    
+    // For other items, check if current path starts with the nav item's href
+    // but exclude the home case (/) to prevent it from matching everything
+    if (navItem.href !== '/' && currentPath.startsWith(navItem.href)) {
+      return true;
+    }
+    
+    // Special handling for /solution path to match Solutions nav item
+    if (navItem.href === '/solutions' && currentPath.startsWith('/solution')) {
+      return true;
+    }
+    
+    return false;
+  }, []);
+
+  // Handle mounting to prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Detect current page based on URL path
+  useEffect(() => {
+    if (!mounted) return;
+    
+    const updateActivePage = () => {
+      const currentPath = window.location.pathname;
+      
+      // Find the active navigation item
+      const activeNavItem = navigationItems.find(item => 
+        isNavItemActive(item, currentPath)
+      );
+      
+      if (activeNavItem) {
+        setActivePage(activeNavItem.title);
+      } else {
+        // Fallback to Home if no match found
+        setActivePage('Home');
+      }
+    };
+
+    updateActivePage();
+  }, [mounted, isNavItemActive]);
+
+  // Also update active page when window location changes (for SPAs)
+  useEffect(() => {
+    if (!mounted) return;
+
+    const handleLocationChange = () => {
+      const currentPath = window.location.pathname;
+      
+      const activeNavItem = navigationItems.find(item => 
+        isNavItemActive(item, currentPath)
+      );
+      
+      if (activeNavItem) {
+        setActivePage(activeNavItem.title);
+      } else {
+        setActivePage('Home');
+      }
+    };
+
+    // Listen for popstate events (back/forward navigation)
+    window.addEventListener('popstate', handleLocationChange);
+    
+    // For SPAs that use pushState/replaceState, you might need to listen to those as well
+    // This is a common pattern for Next.js routing
+    const originalPushState = window.history.pushState;
+    const originalReplaceState = window.history.replaceState;
+    
+    window.history.pushState = function(...args) {
+      originalPushState.apply(window.history, args);
+      setTimeout(handleLocationChange, 0);
+    };
+    
+    window.history.replaceState = function(...args) {
+      originalReplaceState.apply(window.history, args);
+      setTimeout(handleLocationChange, 0);
+    };
+
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.history.pushState = originalPushState;
+      window.history.replaceState = originalReplaceState;
+    };
+  }, [mounted, isNavItemActive]);
+
   // Scroll effect
   useEffect(() => {
+    if (!mounted) return;
+
     const handleScroll = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       setIsScrolled(scrollTop > 50);
@@ -274,12 +294,15 @@ const Navbar = () => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [mounted]);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
+    if (!mounted) return;
+
     const handleClickOutside = (event: MouseEvent) => {
-      if ((activeDropdown || activeTopDropdown) && !(event.target as Element).closest('.dropdown-container')) {
+      const target = event.target as Element;
+      if ((activeDropdown || activeTopDropdown) && !target.closest('.dropdown-container')) {
         setActiveDropdown(null);
         setActiveTopDropdown(null);
       }
@@ -287,17 +310,124 @@ const Navbar = () => {
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [activeDropdown, activeTopDropdown]);
+  }, [activeDropdown, activeTopDropdown, mounted]);
 
-  const handleDropdownToggle = (title: string) => {
-    setActiveDropdown(activeDropdown === title ? null : title);
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+      }
+      if (topHoverTimeout) {
+        clearTimeout(topHoverTimeout);
+      }
+    };
+  }, [hoverTimeout, topHoverTimeout]);
+
+  const handleDropdownToggle = useCallback((title: string) => {
+    if (isMobileMenuOpen) {
+      // Mobile behavior - toggle on click
+      setActiveDropdown(activeDropdown === title ? null : title);
+    } else {
+      // Desktop behavior - show immediately
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+        setHoverTimeout(null);
+      }
+      setActiveDropdown(title);
+      setActiveTopDropdown(null);
+    }
+  }, [isMobileMenuOpen, activeDropdown, hoverTimeout]);
+
+  const handleDropdownMouseEnter = useCallback((title: string) => {
+    if (!isMobileMenuOpen) {
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+        setHoverTimeout(null);
+      }
+      setActiveDropdown(title);
+      setActiveTopDropdown(null);
+      setHoveredItem(title);
+    }
+  }, [isMobileMenuOpen, hoverTimeout]);
+
+  const handleDropdownMouseLeave = useCallback(() => {
+    if (!isMobileMenuOpen) {
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+      }
+      const timeout = setTimeout(() => {
+        setActiveDropdown(null);
+        setHoveredItem(null);
+      }, 500); // 0.5 second delay
+      setHoverTimeout(timeout);
+    }
+  }, [isMobileMenuOpen, hoverTimeout]);
+
+  const handleNavItemMouseEnter = useCallback((title: string) => {
+    setHoveredItem(title);
+  }, []);
+
+  const handleNavItemMouseLeave = useCallback(() => {
+    setHoveredItem(null);
+  }, []);
+
+  const handleNavItemClick = useCallback((title: string, href: string, e?: React.MouseEvent) => {
+    // Close dropdowns and mobile menu
+    setActiveDropdown(null);
     setActiveTopDropdown(null);
-  };
+    setIsMobileMenuOpen(false);
+    
+    // Use Next.js router for programmatic navigation
+    if (e) {
+      e.preventDefault();
+      router.push(href);
+    }
+  }, [router]);
 
-  const handleTopDropdownToggle = (title: string) => {
+  const handleTopDropdownToggle = useCallback((title: string) => {
+    if (topHoverTimeout) {
+      clearTimeout(topHoverTimeout);
+      setTopHoverTimeout(null);
+    }
     setActiveTopDropdown(activeTopDropdown === title ? null : title);
     setActiveDropdown(null);
-  };
+  }, [activeTopDropdown, topHoverTimeout]);
+
+  const handleTopDropdownMouseEnter = useCallback((title: string) => {
+    if (topHoverTimeout) {
+      clearTimeout(topHoverTimeout);
+      setTopHoverTimeout(null);
+    }
+    setActiveTopDropdown(title);
+    setActiveDropdown(null);
+  }, [topHoverTimeout]);
+
+  const handleTopDropdownMouseLeave = useCallback(() => {
+    if (topHoverTimeout) {
+      clearTimeout(topHoverTimeout);
+    }
+    const timeout = setTimeout(() => {
+      setActiveTopDropdown(null);
+    }, 2000); // 2 second delay
+    setTopHoverTimeout(timeout);
+  }, [topHoverTimeout]);
+
+  const handleLogoClick = useCallback(() => {
+    setActiveDropdown(null);
+    setActiveTopDropdown(null);
+    router.push('/');
+  }, [router]);
+
+  const handleDropdownLinkClick = useCallback(() => {
+    setActiveDropdown(null);
+    setActiveTopDropdown(null);
+  }, []);
+
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <>
@@ -312,13 +442,8 @@ const Navbar = () => {
                 <div key={item.title} className="relative dropdown-container">
                   <button 
                     onClick={() => handleTopDropdownToggle(item.title)}
-                    onMouseEnter={() => {
-                      setActiveTopDropdown(item.title);
-                      setActiveDropdown(null);
-                    }}
-                    onMouseLeave={() => {
-                      setActiveTopDropdown(null);
-                    }}
+                    onMouseEnter={() => handleTopDropdownMouseEnter(item.title)}
+                    onMouseLeave={handleTopDropdownMouseLeave}
                     className="flex items-center space-x-1 text-white hover:text-gray-300 transition-colors duration-200"
                   >
                     <span>{item.title}</span>
@@ -327,17 +452,16 @@ const Navbar = () => {
                   {activeTopDropdown === item.title && (
                     <div 
                       className="top-dropdown-menu fixed top-10 left-0 w-full bg-white text-gray-900 shadow-xl z-50 border-t border-gray-200 dropdown-enter navbar-dropdown"
-                      onMouseEnter={() => setActiveTopDropdown(item.title)}
-                      onMouseLeave={() => {
-                        setActiveTopDropdown(null);
-                      }}
+                      onMouseEnter={() => handleTopDropdownMouseEnter(item.title)}
+                      onMouseLeave={handleTopDropdownMouseLeave}
                     >
                       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                         <div className="grid grid-cols-5 gap-6">
-                          {item.items.map((subItem, index) => (
+                          {item.items.map((subItem: TopNavItem, index: number) => (
                             <div key={index} className="group">
-                              <a
+                              <Link
                                 href={subItem.href}
+                                onClick={handleDropdownLinkClick}
                                 className={`block p-4 rounded-lg transition-all duration-200 ${
                                   subItem.isActive 
                                     ? 'bg-red-50 border-l-4 border-red-600' 
@@ -355,7 +479,7 @@ const Navbar = () => {
                                 <p className="text-sm text-gray-600">
                                   {subItem.description}
                                 </p>
-                              </a>
+                              </Link>
                             </div>
                           ))}
                         </div>
@@ -374,10 +498,10 @@ const Navbar = () => {
                 </button>
                 <div className="absolute top-full right-0 mt-1 w-48 bg-white text-gray-900 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <div className="py-2">
-                    <a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors duration-200">Worldwide</a>
-                    <a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors duration-200">Asia Pacific</a>
-                    <a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors duration-200">Europe</a>
-                    <a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors duration-200">North America</a>
+                    <Link href="#" className="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors duration-200">Worldwide</Link>
+                    <Link href="#" className="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors duration-200">Asia Pacific</Link>
+                    <Link href="#" className="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors duration-200">Europe</Link>
+                    <Link href="#" className="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors duration-200">North America</Link>
                   </div>
                 </div>
               </div>
@@ -394,50 +518,73 @@ const Navbar = () => {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex-shrink-0">
-              <Image
-                src="/huaweilogo-new.png"
-                alt="Huawei"
-                width={isScrolled ? 100 : 120}
-                height={isScrolled ? 30 : 40}
-                className={`transition-all duration-300 ${
-                  isScrolled ? 'h-6 w-auto' : 'h-8 w-auto'
-                }`}
-              />
+              <button onClick={handleLogoClick} className="focus:outline-none">
+                <Image
+                  src="/huaweilogo-new.png"
+                  alt="Huawei"
+                  width={isScrolled ? 100 : 120}
+                  height={isScrolled ? 30 : 40}
+                  className={`transition-all duration-300 ${
+                    isScrolled ? 'h-6 w-auto' : 'h-8 w-auto'
+                  }`}
+                  priority
+                />
+              </button>
             </div>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-8">
               {navigationItems.map((item) => (
                 <div key={item.title} className="relative dropdown-container">
-                  <button
-                    onClick={() => handleDropdownToggle(item.title)}
-                    onMouseEnter={() => {
-                      setActiveDropdown(item.title);
-                      setActiveTopDropdown(null);
-                    }}
-                    onMouseLeave={() => {
-                      setActiveDropdown(null);
-                    }}
-                    className={`navbar-item flex items-center space-x-1 px-3 py-2 text-sm font-medium transition-colors duration-200 ${
-                      activeDropdown === item.title
-                        ? 'text-red-600 border-b-2 border-red-600'
-                        : 'text-gray-700 hover:text-red-600'
-                    }`}
-                  >
-                    <span>{item.title}</span>
-                    <ChevronDownIcon className="w-4 h-4" />
-                  </button>
+                  {item.dropdownContent ? (
+                    <button
+                      onClick={() => handleDropdownToggle(item.title)}
+                      onMouseEnter={() => handleDropdownMouseEnter(item.title)}
+                      onMouseLeave={handleDropdownMouseLeave}
+                      className={`navbar-item flex items-center space-x-1 px-3 py-2 text-sm font-medium transition-colors duration-200 relative ${
+                        activePage === item.title || activeDropdown === item.title || hoveredItem === item.title
+                          ? 'text-red-600'
+                          : 'text-gray-700 hover:text-red-600'
+                      }`}
+                    >
+                      <span>{item.title}</span>
+                      <ChevronDownIcon className="w-4 h-4" />
+                      {/* Active/Hover Underline */}
+                      <div className={`absolute bottom-0 left-0 w-full h-0.5 bg-red-600 transition-all duration-200 ${
+                        activePage === item.title || activeDropdown === item.title || hoveredItem === item.title
+                          ? 'opacity-100 scale-x-100'
+                          : 'opacity-0 scale-x-0'
+                      }`} />
+                    </button>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      onClick={(e) => handleNavItemClick(item.title, item.href, e)}
+                      onMouseEnter={() => handleNavItemMouseEnter(item.title)}
+                      onMouseLeave={handleNavItemMouseLeave}
+                      className={`navbar-item flex items-center space-x-1 px-3 py-2 text-sm font-medium transition-colors duration-200 relative ${
+                        activePage === item.title || hoveredItem === item.title
+                          ? 'text-red-600'
+                          : 'text-gray-700 hover:text-red-600'
+                      }`}
+                    >
+                      <span>{item.title}</span>
+                      {/* Active/Hover Underline */}
+                      <div className={`absolute bottom-0 left-0 w-full h-0.5 bg-red-600 transition-all duration-200 ${
+                        activePage === item.title || hoveredItem === item.title
+                          ? 'opacity-100 scale-x-100'
+                          : 'opacity-0 scale-x-0'
+                      }`} />
+                    </Link>
+                  )}
 
-                  {/* Dropdown Menu */}
+                  {/* Dropdown Menu - Only show for items that have dropdownContent */}
                   {activeDropdown === item.title && item.dropdownContent && (
                     <div
                       className="dropdown-menu fixed left-0 w-full bg-white shadow-xl z-50 border-t border-gray-200 dropdown-enter navbar-dropdown"
                       style={{ top: isScrolled ? '64px' : '104px' }}
-                      onMouseEnter={() => setActiveDropdown(item.title)}
-                      onMouseLeave={() => {
-                        setActiveDropdown(null);
-                        setActiveTopDropdown(null);
-                      }}
+                      onMouseEnter={() => handleDropdownMouseEnter(item.title)}
+                      onMouseLeave={handleDropdownMouseLeave}
                     >
                       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -449,12 +596,13 @@ const Navbar = () => {
                               <ul className="space-y-2">
                                 {section.items.map((subItem, subIndex) => (
                                   <li key={subIndex}>
-                                    <a
+                                    <Link
                                       href="#"
+                                      onClick={handleDropdownLinkClick}
                                       className="text-sm text-gray-600 hover:text-red-600 transition-colors duration-200"
                                     >
                                       {subItem}
-                                    </a>
+                                    </Link>
                                   </li>
                                 ))}
                               </ul>
@@ -467,18 +615,23 @@ const Navbar = () => {
                           <div className="mt-8 pt-6 border-t border-gray-200">
                             <div className="flex flex-wrap gap-6">
                               {item.dropdownContent.links.map((link, linkIndex) => (
-                                <a
+                                <Link
                                   key={linkIndex}
                                   href={link.href}
-                                  className="inline-flex items-center text-sm font-medium text-red-600 hover:text-red-700 transition-colors duration-200"
+                                  onClick={handleDropdownLinkClick}
+                                  className="inline-flex items-center text-sm font-medium text-red-600 hover:text-red-700 transition-colors duration-200 group"
                                 >
                                   {link.name}
                                   {link.external && (
-                                    <svg className="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <svg 
+                                      className="w-3 h-3 ml-1 transform group-hover:translate-x-1 transition-transform duration-200" 
+                                      fill="currentColor" 
+                                      viewBox="0 0 20 20"
+                                    >
                                       <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
                                     </svg>
                                   )}
-                                </a>
+                                </Link>
                               ))}
                             </div>
                           </div>
@@ -501,6 +654,7 @@ const Navbar = () => {
                     setActiveTopDropdown(null);
                   }}
                   className="p-2 text-gray-600 hover:text-red-600 transition-colors duration-200"
+                  aria-label="Search"
                 >
                   <MagnifyingGlassIcon className="w-5 h-5" />
                 </button>
@@ -512,6 +666,7 @@ const Navbar = () => {
                           type="text"
                           placeholder="Search"
                           className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                          autoFocus
                         />
                         <button className="px-4 py-2 bg-red-600 text-white rounded-r-md hover:bg-red-700 transition-colors duration-200">
                           <MagnifyingGlassIcon className="w-4 h-4" />
@@ -530,9 +685,21 @@ const Navbar = () => {
                   setActiveTopDropdown(null);
                 }}
                 className="lg:hidden p-2 text-gray-600 hover:text-red-600 transition-colors duration-200"
+                aria-label="Toggle mobile menu"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <svg 
+                  className={`w-6 h-6 transform transition-transform duration-200 ${
+                    isMobileMenuOpen ? 'rotate-90' : 'rotate-0'
+                  }`} 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  {isMobileMenuOpen ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  )}
                 </svg>
               </button>
             </div>
@@ -545,35 +712,60 @@ const Navbar = () => {
             <div className="px-4 py-2 space-y-2">
               {navigationItems.map((item) => (
                 <div key={item.title} className="border-b border-gray-100 last:border-b-0">
-                  <button
-                    onClick={() => handleDropdownToggle(item.title)}
-                    className="w-full flex items-center justify-between py-3 text-sm font-medium text-gray-700 hover:text-red-600 transition-colors duration-200"
-                  >
-                    <span>{item.title}</span>
-                    <ChevronDownIcon className={`w-4 h-4 transform transition-transform duration-200 ${activeDropdown === item.title ? 'rotate-180' : ''}`} />
-                  </button>
-                  {activeDropdown === item.title && item.dropdownContent && (
-                    <div className="pb-4 space-y-4">
-                      {item.dropdownContent.sections.map((section, index) => (
-                        <div key={index} className="ml-4">
-                          <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wide mb-2">
-                            {section.title}
-                          </h4>
-                          <ul className="space-y-1">
-                            {section.items.slice(0, 3).map((subItem, subIndex) => (
-                              <li key={subIndex}>
-                                <a
-                                  href="#"
-                                  className="block text-sm text-gray-600 hover:text-red-600 transition-colors duration-200 py-1"
-                                >
-                                  {subItem}
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
+                  {item.dropdownContent ? (
+                    <>
+                      <button
+                        onClick={() => handleDropdownToggle(item.title)}
+                        className={`w-full flex items-center justify-between py-3 text-sm font-medium transition-colors duration-200 relative ${
+                          activePage === item.title ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
+                        }`}
+                      >
+                        <span>{item.title}</span>
+                        <ChevronDownIcon className={`w-4 h-4 transform transition-transform duration-200 ${activeDropdown === item.title ? 'rotate-180' : ''}`} />
+                        {/* Active bar for mobile */}
+                        {activePage === item.title && (
+                          <div className="absolute left-0 top-0 w-1 h-full bg-red-600" />
+                        )}
+                      </button>
+                      {activeDropdown === item.title && item.dropdownContent && (
+                        <div className="pb-4 space-y-4">
+                          {item.dropdownContent.sections.map((section, index) => (
+                            <div key={index} className="ml-4">
+                              <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wide mb-2">
+                                {section.title}
+                              </h4>
+                              <ul className="space-y-1">
+                                {section.items.slice(0, 3).map((subItem, subIndex) => (
+                                  <li key={subIndex}>
+                                    <Link
+                                      href="#"
+                                      onClick={handleDropdownLinkClick}
+                                      className="block text-sm text-gray-600 hover:text-red-600 transition-colors duration-200 py-1"
+                                    >
+                                      {subItem}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
+                      )}
+                    </>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      onClick={(e) => handleNavItemClick(item.title, item.href, e)}
+                      className={`block py-3 text-sm font-medium transition-colors duration-200 relative ${
+                        activePage === item.title ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
+                      }`}
+                    >
+                      {item.title}
+                      {/* Active bar for mobile */}
+                      {activePage === item.title && (
+                        <div className="absolute left-0 top-0 w-1 h-full bg-red-600" />
+                      )}
+                    </Link>
                   )}
                 </div>
               ))}

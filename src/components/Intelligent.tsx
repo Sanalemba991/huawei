@@ -5,15 +5,16 @@ import { useEffect, useRef, useState } from 'react';
 import { Variants } from 'framer-motion';
 const categories = [
   {
-    id: 1,
-    title: "Panda P Series",
-    subtitle: "Wireless Security Made Simple",
-    description: "Experience seamless wireless surveillance with our advanced Wi-Fi cameras featuring HD video quality, night vision, and smartphone connectivity.",
-    image: "/intelligent/intelligent.jpg",
-    buttonText: "Learn more ",
-    buttonLink: "/products/pandap",
-    alignLeft: true
-  },
+  id: 1,
+  title: "100 Intelligent Transformation Stories",
+  subtitle: "Real Stories. Real Impact.",
+  description: "Discover how organizations across industries are using intelligent technologies to drive innovation, boost efficiency, and create smarter futures.",
+  image: "/intelligent/intelligent.jpg",
+  buttonText: "Learn more",
+  buttonLink: "/stories/intelligent-transformation",
+  alignLeft: true
+},
+
   
 ];
 
