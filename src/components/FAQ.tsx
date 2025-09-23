@@ -170,7 +170,7 @@ const FAQ = () => {
               Everything You Need to Know
             </h2>
             <p className="text-gray-600 max-w-xl mx-auto">
-              Find answers to the most common questions about our marine and oilfield equipment services, 
+              Find answers to the most common questions about our Huawei products, services, warranty,
               quality standards, and how we can support your industry needs.
             </p>
           </motion.div>

@@ -1,4 +1,9 @@
 @import "tailwindcss";
+html, body {
+  overflow-x: hidden; /* Disable horizontal scroll */
+  overflow-y: auto;   /* Keep vertical scroll enabled */
+}
+
 
 /* Custom dropdown animations */
 @keyframes slideInFromTop {

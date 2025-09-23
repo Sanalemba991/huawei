@@ -4,12 +4,17 @@ import Image from 'next/image';
 import { motion, useInView } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { Variants } from 'framer-motion';
+import Topic1 from '../../public/Topic/Topic 1.jpg';
+import Topic2 from '../../public/Topic/Topic 2.png';
+import Topic3 from '../../public/Topic/Topic 3.jpg';
+import Topic4 from '../../public/Topic/Topic 4.jpg';
+import Topic5 from '../../public/Topic/Topic 5.png';
 
 const Topic = () => {
     const router = useRouter();
 
     // Animation variants
-    const containerVariants: Variants= {
+    const containerVariants: Variants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
@@ -19,7 +24,7 @@ const Topic = () => {
         }
     };
 
-    const itemVariants : Variants = {
+    const itemVariants: Variants = {
         hidden: { y: 20, opacity: 0 },
         visible: {
             y: 0,
@@ -35,18 +40,18 @@ const Topic = () => {
     const gridRef = useRef(null);
     const isGridInView = useInView(gridRef, { once: true, margin: "-50px" });
 
-    // Navigation handler for cards - FIXED: Added proper typing
+    // Navigation handler for cards
     const handleCardClick = (path: string) => {
         router.push(path);
     };
 
-    // Fixed image URLs - using proper Next.js public path structure
+    // Fixed: Correct image imports - use the imported variables directly
     const images = {
-        topic: "/Topic/Topic1.jpg",
-        huaweiEkit: "/Topic/Topic2.png",
-        oceanProtect: "/Topic/Topic3.jpg",
-        digitalPartner: "/Topic/Topic4.jpg",
-        gartnerReport: "/Topic/Topic5.png"
+        topic: Topic1,
+        huaweiEkit: Topic2,
+        oceanProtect: Topic3, 
+        digitalPartner: Topic4,
+        gartnerReport: Topic5
     };
 
     return (
@@ -120,7 +125,7 @@ const Topic = () => {
                                         fill
                                         style={{ objectFit: 'cover' }}
                                         className="group-hover:scale-105 transition-transform duration-500 ease-out"
-                                        priority // Add priority for important images
+                                        priority
                                     />
                                 </div>
                             </div>
