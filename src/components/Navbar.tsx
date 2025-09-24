@@ -12,7 +12,10 @@ interface NavigationItem {
   dropdownContent?: {
     sections: {
       title: string;
-      items: string[];
+      items: Array<{
+        name: string;
+        href: string;
+      }>;
     }[];
     links?: {
       name: string;
@@ -41,6 +44,7 @@ const Navbar = () => {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [activePage, setActivePage] = useState<string>('Home');
   const [mounted, setMounted] = useState(false);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState<string | null>(null);
 
   // Top navigation data
   const topNavItems = [
@@ -92,32 +96,32 @@ const Navbar = () => {
           {
             title: 'Enterprise Networking',
             items: [
-              'Campus Switches',
-              'Data Center Switches',
-              'Routers',
-              'WLAN Products',
-              'Network Management',
-              'Network Security'
+              { name: 'Campus Switches', href: '/products/campus-switches' },
+              { name: 'Data Center Switches', href: '/products/data-center-switches' },
+              { name: 'Routers', href: '/products/routers' },
+              { name: 'WLAN Products', href: '/products/wlan' },
+              { name: 'Network Management', href: '/products/network-management' },
+              { name: 'Network Security', href: '/products/network-security' }
             ]
           },
           {
             title: 'Computing & Cloud',
             items: [
-              'Servers',
-              'Desktop Cloud',
-              'Huawei Cloud',
-              'AI Computing',
-              'Edge Computing'
+              { name: 'Servers', href: '/products/servers' },
+              { name: 'Desktop Cloud', href: '/products/desktop-cloud' },
+              { name: 'Huawei Cloud', href: '/products/cloud' },
+              { name: 'AI Computing', href: '/products/ai-computing' },
+              { name: 'Edge Computing', href: '/products/edge-computing' }
             ]
           },
           {
             title: 'Collaboration',
             items: [
-              'Video Conferencing',
-              'Telepresence',
-              'IP Phones',
-              'Unified Communications',
-              'Contact Center'
+              { name: 'Video Conferencing', href: '/products/video-conferencing' },
+              { name: 'Telepresence', href: '/products/telepresence' },
+              { name: 'IP Phones', href: '/products/ip-phones' },
+              { name: 'Unified Communications', href: '/products/unified-communications' },
+              { name: 'Contact Center', href: '/products/contact-center' }
             ]
           }
         ],
@@ -132,37 +136,24 @@ const Navbar = () => {
       dropdownContent: {
         sections: [
           {
-            title: 'Industry Solutions',
+            title: 'Solutions',
             items: [
-              'Government',
-              'Education',
-              'Healthcare',
-              'Finance',
-              'Manufacturing',
-              'Retail',
-              'Transportation',
-              'Energy & Utilities'
-            ]
-          },
-          {
-            title: 'Technology Solutions',
-            items: [
-              'Data Center',
-              'Digital Campus',
-              'Intelligent Campus',
-              'Wide Area Network',
-              'Digital Transformation',
-              'Cloud Migration'
-            ]
-          },
-          {
-            title: 'Smart City',
-            items: [
-              'Smart Transportation',
-              'Safe City',
-              'Smart Education',
-              'Smart Healthcare',
-              'Digital Government'
+              {
+                name: 'Intelligent Office',
+                href: '/solution/it-office'
+              },
+              {
+                name: 'Intelligent Business',
+                href: '/solution/it-business'
+              },
+              {
+                name: 'Intelligent Education',
+                href: '/solution/it-education'
+              },
+              {
+                name: 'Intelligent Healthcare',
+                href: '/solution/it-health'
+              }
             ]
           }
         ],
@@ -235,7 +226,7 @@ const Navbar = () => {
     };
 
     updateActivePage();
-  }, [mounted, isNavItemActive]);
+  }, [mounted, isNavItemActive, navigationItems]);
 
   // Also update active page when window location changes (for SPAs)
   useEffect(() => {
@@ -278,7 +269,7 @@ const Navbar = () => {
       window.history.pushState = originalPushState;
       window.history.replaceState = originalReplaceState;
     };
-  }, [mounted, isNavItemActive]);
+  }, [mounted, isNavItemActive, navigationItems]);
 
   // Scroll effect
   useEffect(() => {
@@ -326,10 +317,12 @@ const Navbar = () => {
 
   const handleDropdownToggle = useCallback((title: string) => {
     if (isMobileMenuOpen) {
-      // Mobile behavior - toggle on click
-      setActiveDropdown(activeDropdown === title ? null : title);
+      // Mobile behavior - toggle on click and prevent event bubbling
+      setActiveDropdown(prevActive => prevActive === title ? null : title);
+      // Close other dropdowns when one is opened
+      setActiveTopDropdown(null);
     } else {
-      // Desktop behavior - show immediately
+      // Desktop behavior remains the same
       if (hoverTimeout) {
         clearTimeout(hoverTimeout);
         setHoverTimeout(null);
@@ -337,7 +330,7 @@ const Navbar = () => {
       setActiveDropdown(title);
       setActiveTopDropdown(null);
     }
-  }, [isMobileMenuOpen, activeDropdown, hoverTimeout]);
+  }, [isMobileMenuOpen, hoverTimeout]);
 
   const handleDropdownMouseEnter = useCallback((title: string) => {
     if (!isMobileMenuOpen) {
@@ -373,16 +366,17 @@ const Navbar = () => {
   }, []);
 
   const handleNavItemClick = useCallback((title: string, href: string, e?: React.MouseEvent) => {
+    e?.preventDefault(); // Prevent default only if event exists
+    
     // Close dropdowns and mobile menu
     setActiveDropdown(null);
     setActiveTopDropdown(null);
     setIsMobileMenuOpen(false);
     
-    // Use Next.js router for programmatic navigation
-    if (e) {
-      e.preventDefault();
+    // Use Next.js router for navigation after state updates
+    setTimeout(() => {
       router.push(href);
-    }
+    }, 0);
   }, [router]);
 
   const handleTopDropdownToggle = useCallback((title: string) => {
@@ -419,10 +413,48 @@ const Navbar = () => {
     router.push('/');
   }, [router]);
 
-  const handleDropdownLinkClick = useCallback(() => {
+  // Updated handleMobileItemClick to handle dropdowns properly
+  const handleMobileItemClick = useCallback((item: NavigationItem) => {
+    // If item has dropdown content, toggle the dropdown instead of navigating
+    if (item.dropdownContent) {
+      setMobileDropdownOpen(mobileDropdownOpen === item.title ? null : item.title);
+    } else {
+      // If no dropdown content, navigate to the page
+      setIsMobileMenuOpen(false);
+      setActiveDropdown(null);
+      setActiveTopDropdown(null);
+      setMobileDropdownOpen(null);
+      router.push(item.href);
+    }
+  }, [router, mobileDropdownOpen]);
+
+  // FIXED: Updated handleDropdownLinkClick to navigate AND close dropdown
+  const handleDropdownLinkClick = useCallback((href: string) => {
     setActiveDropdown(null);
     setActiveTopDropdown(null);
-  }, []);
+    setIsMobileMenuOpen(false);
+    setMobileDropdownOpen(null);
+    router.push(href);
+  }, [router]);
+
+  // Fixed mobile link click handler
+  const handleMobileLinkClick = useCallback((href: string, e?: React.MouseEvent) => {
+    e?.preventDefault();
+    setIsMobileMenuOpen(false);
+    setActiveDropdown(null);
+    setActiveTopDropdown(null);
+    setMobileDropdownOpen(null);
+    router.push(href);
+  }, [router]);
+
+  // Handle mobile dropdown link click
+  const handleMobileDropdownLinkClick = useCallback((href: string) => {
+    setIsMobileMenuOpen(false);
+    setActiveDropdown(null);
+    setActiveTopDropdown(null);
+    setMobileDropdownOpen(null);
+    router.push(href);
+  }, [router]);
 
   // Prevent hydration mismatch by not rendering until mounted
   if (!mounted) {
@@ -461,7 +493,7 @@ const Navbar = () => {
                             <div key={index} className="group">
                               <Link
                                 href={subItem.href}
-                                onClick={handleDropdownLinkClick}
+                                onClick={() => handleDropdownLinkClick(subItem.href)}
                                 className={`block p-4 rounded-lg transition-all duration-200 ${
                                   subItem.isActive 
                                     ? 'bg-red-50 border-l-4 border-red-600' 
@@ -597,11 +629,14 @@ const Navbar = () => {
                                 {section.items.map((subItem, subIndex) => (
                                   <li key={subIndex}>
                                     <Link
-                                      href="#"
-                                      onClick={handleDropdownLinkClick}
-                                      className="text-sm text-gray-600 hover:text-red-600 transition-colors duration-200"
+                                      href={subItem.href}
+                                      className="text-sm text-gray-600 hover:text-red-600 transition-colors duration-200 block py-2"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        handleDropdownLinkClick(subItem.href);
+                                      }}
                                     >
-                                      {subItem}
+                                      {subItem.name}
                                     </Link>
                                   </li>
                                 ))}
@@ -618,7 +653,10 @@ const Navbar = () => {
                                 <Link
                                   key={linkIndex}
                                   href={link.href}
-                                  onClick={handleDropdownLinkClick}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    handleDropdownLinkClick(link.href);
+                                  }}
                                   className="inline-flex items-center text-sm font-medium text-red-600 hover:text-red-700 transition-colors duration-200 group"
                                 >
                                   {link.name}
@@ -683,6 +721,7 @@ const Navbar = () => {
                   setIsMobileMenuOpen(!isMobileMenuOpen);
                   setActiveDropdown(null);
                   setActiveTopDropdown(null);
+                  setMobileDropdownOpen(null);
                 }}
                 className="lg:hidden p-2 text-gray-600 hover:text-red-600 transition-colors duration-200"
                 aria-label="Toggle mobile menu"
@@ -708,64 +747,78 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden bg-white border-t border-gray-200">
+          <div className="lg:hidden bg-white border-t border-gray-200 max-h-[calc(100vh-4rem)] overflow-y-auto mobile-menu">
             <div className="px-4 py-2 space-y-2">
               {navigationItems.map((item) => (
                 <div key={item.title} className="border-b border-gray-100 last:border-b-0">
-                  {item.dropdownContent ? (
-                    <>
-                      <button
-                        onClick={() => handleDropdownToggle(item.title)}
-                        className={`w-full flex items-center justify-between py-3 text-sm font-medium transition-colors duration-200 relative ${
-                          activePage === item.title ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
-                        }`}
-                      >
-                        <span>{item.title}</span>
-                        <ChevronDownIcon className={`w-4 h-4 transform transition-transform duration-200 ${activeDropdown === item.title ? 'rotate-180' : ''}`} />
-                        {/* Active bar for mobile */}
-                        {activePage === item.title && (
-                          <div className="absolute left-0 top-0 w-1 h-full bg-red-600" />
-                        )}
-                      </button>
-                      {activeDropdown === item.title && item.dropdownContent && (
-                        <div className="pb-4 space-y-4">
-                          {item.dropdownContent.sections.map((section, index) => (
-                            <div key={index} className="ml-4">
-                              <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wide mb-2">
-                                {section.title}
-                              </h4>
-                              <ul className="space-y-1">
-                                {section.items.slice(0, 3).map((subItem, subIndex) => (
-                                  <li key={subIndex}>
-                                    <Link
-                                      href="#"
-                                      onClick={handleDropdownLinkClick}
-                                      className="block text-sm text-gray-600 hover:text-red-600 transition-colors duration-200 py-1"
-                                    >
-                                      {subItem}
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <Link
-                      href={item.href}
-                      onClick={(e) => handleNavItemClick(item.title, item.href, e)}
-                      className={`block py-3 text-sm font-medium transition-colors duration-200 relative ${
-                        activePage === item.title ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
-                      }`}
-                    >
-                      {item.title}
-                      {/* Active bar for mobile */}
+                  <button
+                    onClick={() => handleMobileItemClick(item)}
+                    className={`w-full flex items-center justify-between py-3 text-sm font-medium transition-colors duration-200 relative ${
+                      activePage === item.title ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
+                    }`}
+                  >
+                    <span>{item.title}</span>
+                    <div className="flex items-center">
                       {activePage === item.title && (
                         <div className="absolute left-0 top-0 w-1 h-full bg-red-600" />
                       )}
-                    </Link>
+                      {item.dropdownContent && (
+                        <ChevronDownIcon 
+                          className={`w-4 h-4 ml-2 transform transition-transform duration-200 ${
+                            mobileDropdownOpen === item.title ? 'rotate-180' : 'rotate-0'
+                          }`} 
+                        />
+                      )}
+                    </div>
+                  </button>
+                  
+                  {/* Mobile Dropdown Content */}
+                  {item.dropdownContent && mobileDropdownOpen === item.title && (
+                    <div className="pb-4 pl-4 space-y-3 bg-gray-50 rounded-lg mt-2">
+                      {item.dropdownContent.sections.map((section, sectionIndex) => (
+                        <div key={sectionIndex} className="space-y-2">
+                          <h4 className="text-sm font-semibold text-gray-900 mt-3 first:mt-1">
+                            {section.title}
+                          </h4>
+                          <ul className="space-y-1 pl-2">
+                            {section.items.map((subItem, subIndex) => (
+                              <li key={subIndex}>
+                                <button
+                                  onClick={() => handleMobileDropdownLinkClick(subItem.href)}
+                                  className="text-sm text-gray-600 hover:text-red-600 transition-colors duration-200 block py-1 w-full text-left"
+                                >
+                                  {subItem.name}
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                      
+                      {/* Mobile Dropdown Bottom Links */}
+                      {item.dropdownContent.links && (
+                        <div className="pt-3 border-t border-gray-200 mt-4">
+                          {item.dropdownContent.links.map((link, linkIndex) => (
+                            <button
+                              key={linkIndex}
+                              onClick={() => handleMobileDropdownLinkClick(link.href)}
+                              className="inline-flex items-center text-sm font-medium text-red-600 hover:text-red-700 transition-colors duration-200 group"
+                            >
+                              {link.name}
+                              {link.external && (
+                                <svg 
+                                  className="w-3 h-3 ml-1 transform group-hover:translate-x-1 transition-transform duration-200" 
+                                  fill="currentColor" 
+                                  viewBox="0 0 20 20"
+                                >
+                                  <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                                </svg>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
               ))}

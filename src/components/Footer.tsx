@@ -21,10 +21,10 @@ const Footer = () => {
     {
       title: "Solutions",
       links: [
-        { name: "Intelligent Office", href: "/solutions/office" },
-        { name: "Intelligent Business", href: "/solutions/business" },
-        { name: "Intelligent Education", href: "/solutions/education" },
-        { name: "Intelligent Healthcare", href: "/solutions/healthcare" },
+        { name: "Intelligent Office", href: "/solution/it-office" },
+        { name: "Intelligent Business", href: "/solution/it-business" },
+        { name: "Intelligent Education", href: "/solution/it-education" },
+        { name: "Intelligent Healthcare", href: "/solution/it-health" },
       ]
     },
     {

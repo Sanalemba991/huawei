@@ -15,7 +15,7 @@ const categories = [
     description: "Transform traditional offices into intelligent workspaces with AI-powered meeting systems, smart collaboration tools, and secure cloud-based platforms that enhance productivity and enable seamless hybrid work experiences.",
     image: Intelligent1,
     buttonText: "Explore Solutions",
-    buttonLink: "/solutions/intelligent-office",
+    buttonLink: "/solution/it-office",
     alignLeft: true
   },
   {
@@ -25,7 +25,7 @@ const categories = [
     description: "Leverage cutting-edge technologies like cloud computing, big data, and AI to optimize business operations, enhance customer experiences, and drive innovation across retail, finance, and service industries.",
     image: Intelligent2,
     buttonText: "Discover More",
-    buttonLink: "/solutions/intelligent-business",
+    buttonLink: "/solution/it-business",
     alignLeft: false
   },
   { 
@@ -35,7 +35,7 @@ const categories = [
     description: "Create immersive, interactive learning experiences with smart classrooms, remote education platforms, and AI-assisted teaching tools that make education more accessible, engaging, and effective for students and educators alike.",
     image: Intelligent3,
     buttonText: "Learn More",
-    buttonLink: "/solutions/intelligent-education",
+    buttonLink: "/solution/it-education",
     alignLeft: true
   },
   {
@@ -45,7 +45,7 @@ const categories = [
     description: "Revolutionize healthcare delivery with telemedicine platforms, AI-assisted diagnosis, smart hospital management systems, and connected medical devices that improve patient outcomes and optimize healthcare operations.",
     image: Intelligent4,
     buttonText: "View Solutions",
-    buttonLink: "/solutions/intelligent-healthcare",
+    buttonLink: "/solution/it-health",
     alignLeft: false
   }
 ];

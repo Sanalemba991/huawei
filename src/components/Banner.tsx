@@ -112,7 +112,7 @@ const Banner = () => {
         </motion.p>
         
         <motion.button 
-          className="px-6 py-2 border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white font-medium rounded-full transition-colors duration-300"
+          className="px-6 py-2 border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white font-medium transition-colors duration-300"
           variants={buttonVariants}
           whileHover="hover"
         >
