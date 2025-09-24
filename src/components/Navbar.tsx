@@ -757,19 +757,20 @@ const Navbar = () => {
                       activePage === item.title ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
                     }`}
                   >
-                    <span>{item.title}</span>
-                    <div className="flex items-center">
+                    <span className="relative">
+                      {item.title}
+                      {/* Underline for active item */}
                       {activePage === item.title && (
-                        <div className="absolute left-0 top-0 w-1 h-full bg-red-600" />
+                        <div className="absolute bottom-[-4px] left-0 w-full h-0.5 bg-red-600" />
                       )}
-                      {item.dropdownContent && (
-                        <ChevronDownIcon 
-                          className={`w-4 h-4 ml-2 transform transition-transform duration-200 ${
-                            mobileDropdownOpen === item.title ? 'rotate-180' : 'rotate-0'
-                          }`} 
-                        />
-                      )}
-                    </div>
+                    </span>
+                    {item.dropdownContent && (
+                      <ChevronDownIcon 
+                        className={`w-4 h-4 ml-2 transform transition-transform duration-200 ${
+                          mobileDropdownOpen === item.title ? 'rotate-180' : 'rotate-0'
+                        }`} 
+                      />
+                    )}
                   </button>
                   
                   {/* Mobile Dropdown Content */}
