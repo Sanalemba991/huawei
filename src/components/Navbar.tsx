@@ -89,6 +89,11 @@ const Navbar = () => {
       dropdownContent: null
     },
     {
+      title: 'About Us',
+      href: '/about',
+      dropdownContent: null
+    },
+    {
       title: 'Products',
       href: '/products',
       dropdownContent: {
@@ -137,11 +142,7 @@ const Navbar = () => {
       href: '/contact',
       dropdownContent: null
     },
-    {
-      title: 'About Us',
-      href: '/about',
-      dropdownContent: null
-    }
+    
   ];
 
   // Function to determine if a nav item should be active based on current path

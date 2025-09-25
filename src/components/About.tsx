@@ -220,16 +220,16 @@ const About = () => {
     return (
         <>
             {/* Hero Section - Reduced Height */}
-            <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
+            <section className="relative h-[60vh] flex items-center justify-center overflow-hidden ">
                 {/* Background Image - Replace with your image */}
-                <div className="absolute inset-0 z-0">
-                    <Image
-                        src={Banner} // Replace with your image path
-                        alt="Mountain landscape background"
-                        fill
-                        className="object-cover"
-                        priority
-                    />
+                <div className="absolute inset-0 bg-cover bg-center bg-fixed">
+                   <div
+          className="absolute inset-0 bg-cover bg-center bg-fixed"
+          style={{
+            backgroundImage: `url("/About/banner.png")`,
+            filter: 'brightness(0.8)'
+          }}
+        />
                     {/* Optional overlay for better text readability */}
                     <div className="absolute inset-0 bg-black/30"></div>
                 </div>
@@ -251,10 +251,9 @@ const About = () => {
                     <motion.button
                         onClick={scrollToProducts}
                         variants={fadeInUp}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="border-2 border-white text-white px-8 py-3 text-base font-medium hover:bg-white hover:text-gray-900 transition-all duration-300 ease-in-out"
-                    >
+                      
+                        className="border-2 border-red-600 text-red-600 px-8 py-3 text-base font-medium hover:bg-red-600 hover:text-white transition-all duration-300 ease-in-out cursor-pointer"
+ >
                         View Our Products
                     </motion.button>
                 </AnimatedSection>
@@ -340,7 +339,7 @@ const About = () => {
                     <div ref={productsSectionRef}>
                         <AnimatedSection variants={fadeInUp} className="mt-16">
                             <h2 className="text-4xl font-bold text-center mb-12">Products in Huawei <span className='text-red-600'>eKit</span> UAE</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 cursor-pointer">
                                 {products.map((product) => (
                                     <motion.div
                                         key={product.id}

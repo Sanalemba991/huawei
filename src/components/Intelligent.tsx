@@ -168,17 +168,7 @@ function CategoryCard({ category, index }: CategoryCardProps) {
           {category.description}
         </motion.p>
 
-        <motion.a
-          variants={textVariants}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          custom={3}
-          href={category.buttonLink}
-          className="text-red-600 hover:text-red-400 text-lg font-medium transition-all duration-300 inline-block group drop-shadow-md"
-        >
-          {category.buttonText.replace(' >>', '')}
-          <span className="transition-transform duration-300 group-hover:translate-x-2 inline-block text-lg">→</span>
-        </motion.a>
+       
       </motion.div>
     </motion.div>
   );

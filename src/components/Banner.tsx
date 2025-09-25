@@ -72,12 +72,12 @@ const Banner = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
       >
-        <Image
-          src={Banners}
-          alt="GITEX GLOBAL 2025 Conference"
-          fill
-          style={{ objectFit: 'cover' }}
-          priority
+       <div
+          className="absolute inset-0 bg-cover bg-center bg-fixed"
+          style={{
+            backgroundImage: `url('/banner/first.jpg')`,
+            filter: 'brightness(0.8)'
+          }}
         />
         {/* Dark overlay for better text visibility */}
         <div className="absolute inset-0 "></div>
