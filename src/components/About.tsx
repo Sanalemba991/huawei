@@ -252,7 +252,7 @@ const About = () => {
                         onClick={scrollToProducts}
                         variants={fadeInUp}
                       
-                        className="border-2 border-red-600 text-red-600 px-8 py-3 text-base font-medium hover:bg-red-600 hover:text-white transition-all duration-300 ease-in-out cursor-pointer"
+                        className="border-2 border-red-600 text-white/80 px-8 py-3 text-base font-medium hover:bg-red-600 hover:text-white transition-all duration-300 ease-in-out cursor-pointer"
  >
                         View Our Products
                     </motion.button>

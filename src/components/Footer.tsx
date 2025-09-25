@@ -155,21 +155,21 @@ const Footer = () => {
                 onClick={() => handleInternalLink('/contact')}
                 className="text-gray-500 hover:text-red-600 transition-colors duration-200 hover:cursor-pointer"
               >
-                Contact
+                Terms of Service
               </button>
               <span className="text-gray-300">•</span>
               <button 
                 onClick={() => handleInternalLink('/privacy')}
                 className="text-gray-500 hover:text-red-600 transition-colors duration-200 hover:cursor-pointer"
               >
-                Privacy
+                Privacy Policy
               </button>
               <span className="text-gray-300">•</span>
               <button 
                 onClick={() => handleInternalLink('/cookies')}
                 className="text-gray-500 hover:text-red-600 transition-colors duration-200 hover:cursor-pointer"
               >
-                Cookies
+               Cookie Policy
               </button>
             </div>
           </div>
