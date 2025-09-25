@@ -130,43 +130,8 @@ const Navbar = () => {
         ]
       }
     },
-    {
-      title: 'Solutions',
-      href: '/solutions',
-      dropdownContent: {
-        sections: [
-          {
-            title: 'Solutions',
-            items: [
-              {
-                name: 'Intelligent Office',
-                href: '/solution/it-office'
-              },
-              {
-                name: 'Intelligent Business',
-                href: '/solution/it-business'
-              },
-              {
-                name: 'Intelligent Education',
-                href: '/solution/it-education'
-              },
-              {
-                name: 'Intelligent Healthcare',
-                href: '/solution/it-health'
-              }
-            ]
-          }
-        ],
-        links: [
-          { name: 'All Solutions', href: '/solution', external: true },
-        ]
-      }
-    },
-    {
-      title: 'Support',
-      href: '/support',
-      dropdownContent: null
-    },
+    
+   
     {
       title: 'Contact Us',
       href: '/contact',

@@ -19,15 +19,6 @@ const Footer = () => {
       ]
     },
     {
-      title: "Solutions",
-      links: [
-        { name: "Intelligent Office", href: "/solution/it-office" },
-        { name: "Intelligent Business", href: "/solution/it-business" },
-        { name: "Intelligent Education", href: "/solution/it-education" },
-        { name: "Intelligent Healthcare", href: "/solution/it-health" },
-      ]
-    },
-    {
       title: "Contact Information",
       isContact: true
     }
@@ -101,15 +92,16 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-white border-t border-gray-200">
+    <footer className="bg-grey border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
         <div className="py-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-            {/* Logo and Follow Section */}
+          {/* Changed to 4 columns for equal spacing */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Logo and Follow Section - takes full width on mobile, 1/4 on lg */}
             <div className="lg:col-span-1">
               {/* Logo */}
-              <div className="mb-4">
+              <div className="mb-6">
                 <div 
                   className="flex items-center cursor-pointer hover:cursor-pointer" 
                   onClick={() => handleInternalLink("/")}
@@ -123,7 +115,7 @@ const Footer = () => {
 
               {/* Social Media Icons - EXTERNAL LINKS */}
               <div>
-                <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-3">
+                <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">
                   Follow Us
                 </h3>
                 <div className="flex space-x-3">
@@ -144,16 +136,16 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Footer Sections */}
+            {/* Footer Sections - each takes 1/4 on lg screens */}
             {footerSections.map((section, index) => (
               <div key={index} className="lg:col-span-1">
-                <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-3">
+                <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">
                   {section.title}
                 </h3>
                 {section.isContact ? (
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {contactInfo.map((contact, contactIndex) => (
-                      <div key={contactIndex} className="flex items-start space-x-2">
+                      <div key={contactIndex} className="flex items-start space-x-3">
                         <div className="text-red-600 mt-0.5 flex-shrink-0">
                           {contact.icon}
                         </div>
@@ -188,7 +180,7 @@ const Footer = () => {
                     ))}
                   </div>
                 ) : (
-                  <ul className="space-y-2">
+                  <ul className="space-y-3">
                     {section.links?.map((link, linkIndex) => (
                       <li key={linkIndex}>
                         <button 
@@ -207,7 +199,7 @@ const Footer = () => {
         </div>
 
         {/* Bottom Footer */}
-        <div className="border-t border-gray-200 py-4">
+        <div className="border-t border-gray-200 py-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             {/* Copyright */}
             <div className="mb-3 md:mb-0">
