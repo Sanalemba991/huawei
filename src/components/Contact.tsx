@@ -173,7 +173,7 @@ export default function Contact() {
                       placeholder="First Name"
                       value={formData.firstName}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 bg-white/15 rounded-xl text-white placeholder-white/80 border border-transparent focus:border-red-400 focus:outline-none transition-colors duration-300"
+                      className="w-full px-4 py-3 bg-white/15 rounded-xl text-white placeholder-white/80 resize-none border border-transparent focus:border-red-400 focus:outline-none transition-colors duration-300"
                       required
                     />
                     <motion.input
@@ -184,7 +184,7 @@ export default function Contact() {
                       placeholder="Last Name"
                       value={formData.lastName}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 bg-white/15 rounded-xl text-white placeholder-white/80 border border-transparent focus:border-red-400 focus:outline-none transition-colors duration-300"
+                      className="w-full px-4 py-3 bg-white/15 rounded-xl text-white placeholder-white/80 resize-none border border-transparent focus:border-red-400 focus:outline-none transition-colors duration-300"
                       required
                     />
                   </div>
@@ -196,7 +196,7 @@ export default function Contact() {
                     placeholder="Email Address"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-white/15 rounded-xl text-white placeholder-white/80 border border-transparent focus:border-red-400 focus:outline-none transition-colors duration-300"
+                    className="w-full px-4 py-3 bg-white/15 rounded-xl text-white placeholder-white/80 resize-none border border-transparent focus:border-red-400 focus:outline-none transition-colors duration-300"
                     required
                   />
                   <motion.input
@@ -207,7 +207,7 @@ export default function Contact() {
                     placeholder="Phone Number"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-white/15 rounded-xl text-white placeholder-white/80 border border-transparent focus:border-red-400 focus:outline-none transition-colors duration-300"
+                    className="w-full px-4 py-3 bg-white/15 rounded-xl text-white placeholder-white/80 resize-none border border-transparent focus:border-red-400 focus:outline-none transition-colors duration-300"
                     required
                   />
                   <motion.textarea
