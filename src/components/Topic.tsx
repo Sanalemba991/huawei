@@ -4,10 +4,10 @@ import Image from 'next/image';
 import { motion, useInView } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { Variants } from 'framer-motion';
-import Topic1 from '../../public/Topic/Topic 1.jpg';
-import Topic2 from '../../public/Topic/Topic 2.png';
-import Topic3 from '../../public/Topic/Topic 3.jpg';
-import Topic4 from '../../public/Topic/Topic 4.jpg';
+import Topic1 from '../../public/SolutionBusiness/First.png';
+import Topic2 from '../../public/SolutionEdu/Campus.jpg';
+import Topic3 from '../../public/Solution/IntelligentHealthcare.png';
+import Topic4 from '../../public/Solution/IntelligentOffice.png';
 import Topic5 from '../../public/Topic/Topic 5.png';
 
 const Topic = () => {
@@ -41,9 +41,7 @@ const Topic = () => {
     const isGridInView = useInView(gridRef, { once: true, margin: "-50px" });
 
     // Navigation handler for cards
-    const handleCardClick = (path: string) => {
-        router.push(path);
-    };
+
 
     // Fixed: Correct image imports - use the imported variables directly
     const images = {
@@ -86,7 +84,7 @@ const Topic = () => {
                         className="lg:col-span-4"
                     >
                         <div
-                            onClick={() => handleCardClick("/solutions/overview")}
+                            
                             className="rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl cursor-pointer group h-full flex flex-col bg-cover bg-center"
                             style={{ backgroundImage: "url('/Topic/bg.jpg')" }}
                         >
@@ -124,7 +122,7 @@ const Topic = () => {
                                         alt="Future-Proof Data Storage Solutions"
                                         fill
                                         style={{ objectFit: 'cover' }}
-                                        className="group-hover:scale-105 transition-transform duration-500 ease-out"
+                                        className=" transition-transform duration-500 ease-out"
                                         priority
                                     />
                                 </div>
@@ -138,7 +136,7 @@ const Topic = () => {
                         <motion.article
                             variants={itemVariants}
                             className="group cursor-pointer"
-                            onClick={() => handleCardClick("/solutions/huawei-ekit")}
+                   
                         >
                             <div className="bg-white rounded-lg transition-all duration-300 overflow-hidden border border-gray-100 h-full flex flex-col group-hover:shadow-lg">
                                 <div className="relative h-56 md:h-64 overflow-hidden bg-gradient-to-br from-red-100 to-red-200">
@@ -147,7 +145,7 @@ const Topic = () => {
                                         alt="HUAWEI eKit"
                                         fill
                                         style={{ objectFit: 'cover' }}
-                                        className="group-hover:scale-105 transition-transform duration-500 ease-out"
+                                        className=" transition-transform duration-500 ease-out"
                                     />
                                 </div>
                                 <div className="p-4 flex flex-col flex-grow text-center">
@@ -166,7 +164,7 @@ const Topic = () => {
                         <motion.article
                             variants={itemVariants}
                             className="group cursor-pointer"
-                            onClick={() => handleCardClick("/solutions/oceanprotect")}
+                      
                         >
                             <div className="bg-white rounded-lg transition-all duration-300 overflow-hidden border border-gray-100 h-full flex flex-col group-hover:shadow-lg">
                                 <div className="relative h-56 md:h-64 overflow-hidden bg-gradient-to-br from-red-100 to-red-200">
@@ -175,7 +173,7 @@ const Topic = () => {
                                         alt="OceanProtect Data Protection"
                                         fill
                                         style={{ objectFit: 'cover' }}
-                                        className="group-hover:scale-105 transition-transform duration-500 ease-out"
+                                        className=" transition-transform duration-500 ease-out"
                                     />
                                 </div>
                                 <div className="p-4 flex flex-col flex-grow text-center">
@@ -194,7 +192,7 @@ const Topic = () => {
                         <motion.article
                             variants={itemVariants}
                             className="group cursor-pointer"
-                            onClick={() => handleCardClick("/solutions/digital-partner")}
+                       
                         >
                             <div className="bg-white rounded-lg transition-all duration-300 overflow-hidden border border-gray-100 h-full flex flex-col group-hover:shadow-lg">
                                 <div className="relative h-56 md:h-64 overflow-hidden bg-gradient-to-br from-red-100 to-red-200">
@@ -203,7 +201,7 @@ const Topic = () => {
                                         alt="Huawei Digital Partner"
                                         fill
                                         style={{ objectFit: 'cover' }}
-                                        className="group-hover:scale-105 transition-transform duration-500 ease-out"
+                                        className=" transition-transform duration-500 ease-out"
                                     />
                                 </div>
                                 <div className="p-4 flex flex-col flex-grow text-center">
@@ -222,7 +220,7 @@ const Topic = () => {
                         <motion.article
                             variants={itemVariants}
                             className="group cursor-pointer"
-                            onClick={() => handleCardClick("/reports/gartner")}
+                          
                         >
                             <div className="bg-white rounded-lg transition-all duration-300 overflow-hidden border border-gray-100 h-full flex flex-col group-hover:shadow-lg">
                                 <div className="relative h-56 md:h-64 overflow-hidden bg-gradient-to-br from-red-100 to-red-200">
@@ -231,7 +229,7 @@ const Topic = () => {
                                         alt="Gartner Report"
                                         fill
                                         style={{ objectFit: 'cover' }}
-                                        className="group-hover:scale-105 transition-transform duration-500 ease-out"
+                                        className=" transition-transform duration-500 ease-out"
                                     />
                                 </div>
                                 <div className="p-4 flex flex-col flex-grow text-center">

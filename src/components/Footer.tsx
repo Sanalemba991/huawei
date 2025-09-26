@@ -8,9 +8,9 @@ const Footer = () => {
       title: "Quick Links",
       links: [
         { name: "Home", href: "/" },
-        { name: "About", href: "/about" },
+        { name: "About Us", href: "/about" },
         { name: "Products", href: "/products" },
-        { name: "Contact", href: "/contact" }
+        { name: "Contact Us", href: "/contact" }
       ]
     },
     {
@@ -18,7 +18,6 @@ const Footer = () => {
       links: [
         { name: "HUAWEI eKit", href: "/products/ekit" },
         { name: "HUAWEI Camera", href: "/products/camera" },
-      
       ]
     },
     {
@@ -41,7 +40,7 @@ const Footer = () => {
     {
       icon: <Phone className="w-3.5 h-3.5" />,
       value: "+0097150966 4956",
-      url: "tel:+0097150966 4956"
+      url: "tel:+00971509664956" // Fixed: removed space from phone number
     }
   ];
 
@@ -79,8 +78,15 @@ const Footer = () => {
             {/* Company Section */}
             <div className="space-y-4">
               <div 
-                className="flex items-center cursor-pointer hover:cursor-pointer" 
+                className="flex items-center cursor-pointer" 
                 onClick={() => handleInternalLink("/")}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleInternalLink("/");
+                  }
+                }}
               >
                 <div className="w-8 h-6 bg-red-600 flex items-center justify-center rounded-sm">
                   <span className="text-white font-bold text-xs">华为</span>
@@ -93,7 +99,19 @@ const Footer = () => {
               </p>
 
               {/* Social Media Icons */}
-              
+              <div className="flex space-x-3">
+                {socialIcons.map((social, index) => (
+                  <a
+                    key={index}
+                    href={social.href}
+                    onClick={(e) => handleExternalLink(social.href, e)}
+                    className="text-gray-400 hover:text-red-600 transition-colors duration-200"
+                    aria-label={social.label}
+                  >
+                    {social.icon}
+                  </a>
+                ))}
+              </div>
             </div>
 
             {/* Footer Sections */}
@@ -106,15 +124,15 @@ const Footer = () => {
                 {section.isContact ? (
                   <div className="space-y-3">
                     {contactInfo.map((contact, contactIndex) => (
-                      <div key={contactIndex} className="flex items-center">
-                        <div className="text-red-600 mr-2 flex-shrink-0">
+                      <div key={contactIndex} className="flex items-start">
+                        <div className="text-red-600 mr-2 flex-shrink-0 mt-0.5">
                           {contact.icon}
                         </div>
                         <a
                           href={contact.url}
-                          className="text-sm text-gray-600 hover:text-red-600 transition-colors duration-200 hover:cursor-pointer"
+                          className="text-sm text-gray-600 hover:text-red-600 transition-colors duration-200 break-words"
                           onClick={(e) => {
-                            if (contact.url.includes('maps.google')) {
+                            if (contact.url.startsWith('http')) {
                               handleExternalLink(contact.url, e);
                             }
                           }}
@@ -130,7 +148,8 @@ const Footer = () => {
                       <li key={linkIndex}>
                         <button 
                           onClick={() => handleInternalLink(link.href)}
-                          className="text-sm text-gray-600 hover:text-red-600 transition-colors duration-200 text-left hover:cursor-pointer"
+                          className="text-sm text-gray-600 hover:text-red-600 cursor-pointer transition-colors duration-200 text-left w-full text-start"
+                          type="button"
                         >
                           {link.name}
                         </button>
@@ -150,26 +169,29 @@ const Footer = () => {
               © 2025 Huawei Technologies Co., Ltd. All Rights Reserved.
             </p>
             
-            <div className="flex flex-wrap justify-center sm:justify-end items-center gap-3 text-xs">
+            <div className="flex flex-wrap justify-center sm:justify-end items-center gap-3 text-xs ">
               <button 
-                onClick={() => handleInternalLink('/contact')}
-                className="text-gray-500 hover:text-red-600 transition-colors duration-200 hover:cursor-pointer"
+                onClick={() => handleInternalLink('/terms-of-service')}
+                className="text-gray-500 hover:text-red-600 transition-colors duration-200 cursor-pointer"
+                type="button" 
               >
                 Terms of Service
-              </button>
+              </button> 
               <span className="text-gray-300">•</span>
               <button 
-                onClick={() => handleInternalLink('/privacy')}
-                className="text-gray-500 hover:text-red-600 transition-colors duration-200 hover:cursor-pointer"
+                onClick={() => handleInternalLink('/privacy-policy')}
+                className="text-gray-500 hover:text-red-600 transition-colors duration-200 cursor-pointer"
+                type="button"
               >
                 Privacy Policy
               </button>
               <span className="text-gray-300">•</span>
               <button 
-                onClick={() => handleInternalLink('/cookies')}
-                className="text-gray-500 hover:text-red-600 transition-colors duration-200 hover:cursor-pointer"
+                onClick={() => handleInternalLink('/cookie-policy')}
+                className="text-gray-500 hover:text-red-600 transition-colors duration-200 cursor-pointer"
+                type="button"
               >
-               Cookie Policy
+                Cookie Policy
               </button>
             </div>
           </div>

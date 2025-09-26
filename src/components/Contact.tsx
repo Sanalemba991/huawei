@@ -223,7 +223,7 @@ export default function Contact() {
                   />
                   <motion.button
                     whileHover={{ 
-                      scale: 1.05,
+                      
                       backgroundColor: "#dc2626",
                       color: "#ffffff",
                       borderColor: "#dc2626"
